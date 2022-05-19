@@ -1,38 +1,28 @@
 // ITERATION 1
-
 function updateSubtotal(product) {
-  console.log('Calculating subtotal, yey!');
+  let myPriceEl = product.querySelector('.price span');            //selection de la span du prix
+  let myQuantityEl = product.querySelector('.quantity input');     //selection de la span de la quantité
+  let mySubTotalEl = product.querySelector('.subtotal span');      //selection de la span du soustotal
+  const price = myPriceEl.innerText                                //selection de la valeur du prix
+  const quantity = myQuantityEl.value                              //selection de la valeur de la quantité
+  const result = price * quantity                                  //on multiplie le prix par la quantité
+  mySubTotalEl.innerHTML = result                                  //on vient écrire notre résultat dans la span soustotal
 
-  let myPriceEl = product.querySelector('.price span'); // <span>
-
-  let myQuantityEl = product.querySelector('.quantity input'); // <input>
-  let mySubTotalEl = product.querySelector('.subtotal span');
-
-  const price = myPriceEl.innerText // "25.00"
-  const quantity = myQuantityEl.value 
-  
-  const ret = price * quantity
-
-  console.log('ret=', ret)
-
-  mySubTotalEl.innerHTML =  ret
-  
 }
 
 function calculateAll() {
-
   // ITERATION 2
-  const productsEl=document.querySelectorAll('.product') // [ <tr>, <tr>, ... ]
-  const productsArray=Array.from(productsEl)
-  for (let i=0;i<productsArray.length;i++){
+  const productsArray = Array.from(document.querySelectorAll('.product'))        // [ <tr>, <tr>, ... ]
+  //const productsArray = Array.from(productsEl)
+  for (let i = 0; i < productsArray.length; i++) {
     updateSubtotal(productsArray[i])
   }
 
   // ITERATION 3
-  let result=0
-  for (let i=0;i<productsArray.length;i++){
-    let subTotal=Number(productsArray[i].querySelector('.subtotal span').innerText)
-    result +=subTotal
+  let result = 0
+  for (let i = 0; i < productsArray.length; i++) {
+    let subTotal = Number(productsArray[i].querySelector('.subtotal span').innerText)
+    result += subTotal
   }
   let totalEl = document.querySelector('#total-value span')
   totalEl.innerHTML = result
@@ -42,19 +32,63 @@ function calculateAll() {
 
 function removeProduct(event) {
   const target = event.currentTarget;
-  console.log('The target in remove is:', target);
-  //... your code goes here
+  //console.log('The target in remove is:', target);
+  let myTarget = target.closest('tr')
+  myTarget.remove()
 }
 
 // ITERATION 5
 
 function createProduct() {
-  //... your code goes here
+  let tBody = document.querySelector('tbody')
+  let inputsArray = Array.from(document.querySelectorAll(".create-product input"))
+  let newProductName = inputsArray[0].value;
+  let newProductPrice = inputsArray[1].value;
+
+  let template = `
+  <tr class="product">
+  <td class="name">
+    <span>${newProductName}</span>
+  </td>
+  <td class="price">$<span>${newProductPrice}</span></td>
+  <td class="quantity">
+    <input type="number" value="0" min="0" placeholder="Quantity" />
+  </td>
+  <td class="subtotal">$<span>0</span></td>
+  <td class="action">
+    <button class="btn btn-remove">Remove</button>
+  </td>
+</tr>`
+
+  tBody.innerHTML += template
+
+  const calculatePricesBtn = document.getElementById('calculate');
+  calculatePricesBtn.addEventListener('click', calculateAll);
+
+  const removeButtonsArray = Array.from(document.querySelectorAll('.product'))
+
+  for (let i = 0; i < removeButtonsArray.length; i++) {
+    removeButtonsArray[i].querySelector('button').addEventListener('click', function (event) {
+      return removeProduct(event)
+    })
+
+  }
 }
 
 window.addEventListener('load', () => {
   const calculatePricesBtn = document.getElementById('calculate');
   calculatePricesBtn.addEventListener('click', calculateAll);
 
-  //... your code goes here
+  const removeButtonsArray = Array.from(document.querySelectorAll('.product'))
+
+  for (let i = 0; i < removeButtonsArray.length; i++) {
+    removeButtonsArray[i].querySelector('button').addEventListener('click', function (event) {
+      return removeProduct(event)
+    })
+  }
 });
+
+
+let createButton = document.getElementById('create')
+//createButton.onclick = function(){createProduct()}
+createButton.addEventListener('click', createProduct)
