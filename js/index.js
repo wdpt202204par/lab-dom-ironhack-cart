@@ -12,43 +12,56 @@ function updateSubtotal(product) {
 
 function calculateAll() {
   // ITERATION 2
-  const productsArray = Array.from(document.querySelectorAll('.product'))        // [ <tr>, <tr>, ... ]
-  //const productsArray = Array.from(productsEl)
-  for (let i = 0; i < productsArray.length; i++) {
-    updateSubtotal(productsArray[i])
+  const productsArray = Array.from(document.querySelectorAll('.product'))        // création d'un tableau avec tous les produits
+  for (let i = 0; i < productsArray.length; i++) {                               // on boucle sur la longueur du tableau
+    updateSubtotal(productsArray[i])                                             // on appelle udpateSubtotal() sur chaque élément du tableau
   }
 
   // ITERATION 3
-  let result = 0
-  for (let i = 0; i < productsArray.length; i++) {
-    let subTotal = Number(productsArray[i].querySelector('.subtotal span').innerText)
-    result += subTotal
+  let result = 0                                                                        //initialisation du résultat
+  for (let i = 0; i < productsArray.length; i++) {                                      //on (re)boucle sur la longueur du tableau
+    let subTotal = Number(productsArray[i].querySelector('.subtotal span').innerText)   //on numérise la string de la valeur du subtotal
+    result += subTotal                                                                  //on ajoute la valeur numérisée au résultat
   }
-  let totalEl = document.querySelector('#total-value span')
-  totalEl.innerHTML = result
+  let totalEl = document.querySelector('#total-value span')                             //selection de la span du total
+  totalEl.innerHTML = result                                                            //on écrit notre résultat dans la span total
 }
 
 // ITERATION 4
+window.addEventListener('load', () => {                                                     //au chargement de la page
+  const calculatePricesBtn = document.getElementById('calculate');                          //selection du bouton calculate
+  calculatePricesBtn.addEventListener('click', calculateAll);                               //ajout d'un EventListener click sur notre bouton
+
+  const productsArray = Array.from(document.querySelectorAll('.product'))                   //création d'un tableau avec tous les produits
+
+  for (let i = 0; i < productsArray.length; i++) {                                          //on boucle sur la longueur du tableau
+    productsArray[i].querySelector('button').addEventListener('click', function (event) {   //pour produit du tableau, on ajoute un EventListener sur le bouton remove
+      return removeProduct(event)                                                           //on appelle la fonction removeProduct
+    })
+  }
+});
 
 function removeProduct(event) {
-  const target = event.currentTarget;
-  //console.log('The target in remove is:', target);
-  let myTarget = target.closest('tr')
-  myTarget.remove()
+  const target = event.currentTarget;                                                       //
+  let myTarget = target.closest('tr')                                                       //on vient cibler la <tr> parente la plus proche du bouton remove
+  myTarget.remove()                                                                         //on efface toute la <tr> 
 }
 
 // ITERATION 5
+let createButton = document.getElementById('create')                    //selection du bouton create
+//createButton.onclick = function(){createProduct()}
+createButton.addEventListener('click', createProduct)                   //ajout d'un EventListener click sur le bouton create
 
 function createProduct() {
-  let tBody = document.querySelector('tbody')
-  let inputsArray = Array.from(document.querySelectorAll(".create-product input"))
-  let newProductName = inputsArray[0].value;
-  let newProductPrice = inputsArray[1].value;
+  let tBody = document.querySelector('tbody')                                               //selection du tbody
+  let inputsArray = Array.from(document.querySelectorAll(".create-product input"))          //création d'un tableau contenant les input de la tr du tfoot
+  let newProductName = inputsArray[0].value;                                                //selection de la valeur du nom du nouveau produit
+  let newProductPrice = inputsArray[1].value;                                               //selection de la valeur du prix du nouveau produit
 
-  let template = `
-  <tr class="product">
+  let template =                                                                            //création du template de la ligne du nouveau produit en écrivant les valeurs du nom et du prix
+  `<tr class="product">
   <td class="name">
-    <span>${newProductName}</span>
+    <span>${newProductName}</span>  
   </td>
   <td class="price">$<span>${newProductPrice}</span></td>
   <td class="quantity">
@@ -60,35 +73,14 @@ function createProduct() {
   </td>
 </tr>`
 
-  tBody.innerHTML += template
+  tBody.innerHTML += template                                                               //on vient écrire la nouvelle ligne du tableau a la fin du tbody
 
-  const calculatePricesBtn = document.getElementById('calculate');
+  const calculatePricesBtn = document.getElementById('calculate');                          //on vient rajouter un EventListener sur le bouton remove de la nouvelle ligne
   calculatePricesBtn.addEventListener('click', calculateAll);
-
-  const removeButtonsArray = Array.from(document.querySelectorAll('.product'))
-
-  for (let i = 0; i < removeButtonsArray.length; i++) {
-    removeButtonsArray[i].querySelector('button').addEventListener('click', function (event) {
+  const productsArray = Array.from(document.querySelectorAll('.product'))
+  for (let i = 0; i < productsArray.length; i++) {
+    productsArray[i].querySelector('button').addEventListener('click', function (event) {
       return removeProduct(event)
     })
-
   }
 }
-
-window.addEventListener('load', () => {
-  const calculatePricesBtn = document.getElementById('calculate');
-  calculatePricesBtn.addEventListener('click', calculateAll);
-
-  const removeButtonsArray = Array.from(document.querySelectorAll('.product'))
-
-  for (let i = 0; i < removeButtonsArray.length; i++) {
-    removeButtonsArray[i].querySelector('button').addEventListener('click', function (event) {
-      return removeProduct(event)
-    })
-  }
-});
-
-
-let createButton = document.getElementById('create')
-//createButton.onclick = function(){createProduct()}
-createButton.addEventListener('click', createProduct)
