@@ -23,21 +23,22 @@ function updateSubtotal(product) {
   return subtotal;
 }
 
+// ITERATION 2
+
 function calculateAll() {
   const productsNodeList    = document.querySelectorAll(".product")
   const productsList        = Array.from(productsNodeList);
+
   let total                 = 0;
 
   productsList.forEach(product => {
     total += updateSubtotal(product);
-    document.querySelector("#total-value span").innerHTML = total;
+    
   });
 
-  // ITERATION 2
-  //... your code goes here
-
   // ITERATION 3
-  //... your code goes here
+
+  document.querySelector("#total-value span").innerHTML = total;
 }
 
 // ITERATION 4
@@ -45,7 +46,7 @@ function calculateAll() {
 function removeProduct(event) {
   const target = event.currentTarget;
 
-  target.parentElement.parentElement.remove();
+  target.parentElement.parentElement.remove();  // Product line is the parent node from the parent node of the "Remove" button
   calculateAll();
 }
 
@@ -85,10 +86,10 @@ function createProduct() {
 window.addEventListener('load', () => {
   const calculatePricesBtn    = document.getElementById('calculate');
   const createProductBtn      = document.getElementById('create');
-
   const removeBtnsNodeList    = document.querySelectorAll(".btn-remove");
   const removeBtnsArray       = Array.from(removeBtnsNodeList);
 
+  // Adding 'click' event listener on each "Remove" button at window loading
   removeBtnsArray.forEach(function (removeBtn) {
     removeBtn.addEventListener('click', event => removeProduct(event));
   });
