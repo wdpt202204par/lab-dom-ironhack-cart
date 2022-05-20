@@ -4,44 +4,34 @@ function updateSubtotal(product) {
   console.log('Calculating subtotal, yey!');
 
   // Step 1
-  const price = product.querySelector(".price span");
-  const quantity = product.querySelector(".quantity input");
+  const price               = product.querySelector(".price span");
+  const quantity            = product.querySelector(".quantity input");
 
   // Step 2
-  const price_value = price.innerHTML;      // '25.00'
-  const quantity_value = quantity.value;       // 0
+  const priceValue          = price.innerHTML;
+  const quantityValue       = quantity.value;
 
   // Step 3
-  const subtotal = price_value * quantity_value;
+  const subtotal            = priceValue * quantityValue;
 
   // Step 4
-  const subtotal_element = product.querySelector(".subtotal span");
+  const subtotalElement     = product.querySelector(".subtotal span");
 
   // Step 5
-  subtotal_element.innerHTML = subtotal;
+  subtotalElement.innerHTML = subtotal;
+
   return subtotal;
 }
 
 function calculateAll() {
-  const product_list = document.querySelectorAll(".product")
+  const productsNodeList    = document.querySelectorAll(".product")
+  const productsList        = Array.from(productsNodeList);
+  let total                 = 0;
 
-  const product_list_Array = Array.from(product_list) // Transformes en vrais tableaux.
-
-  let total = 0;
-
-  product_list_Array.forEach(function (product) {
+  productsList.forEach(product => {
     total += updateSubtotal(product);
-
-  document.querySelector("#total-value span").innerHTML = total;
-    
+    document.querySelector("#total-value span").innerHTML = total;
   });
-
-
-
-  // code in the following two lines is added just for testing purposes.
-  // it runs when only iteration 1 is completed. at later point, it can be removed.
-
-  // end of test
 
   // ITERATION 2
   //... your code goes here
@@ -54,19 +44,55 @@ function calculateAll() {
 
 function removeProduct(event) {
   const target = event.currentTarget;
-  console.log('The target in remove is:', target);
-  //... your code goes here
+
+  target.parentElement.parentElement.remove();
+  calculateAll();
 }
 
 // ITERATION 5
 
 function createProduct() {
-  //... your code goes here
+  const newProductName  = document.querySelector(".create-product td:nth-child(1) input");
+  const newProductPrice = document.querySelector(".create-product td:nth-child(2) input");
+
+  const newProduct = document.createElement('tr');
+  newProduct.classList.add('product');
+  newProduct.innerHTML =`
+      <td class="name">
+        <span>${newProductName.value}</span>
+      </td>
+      <td class="price">$<span>${newProductPrice.value}</span></td>
+      <td class="quantity">
+        <input type="number" value="0" min="0" placeholder="Quantity" />
+      </td>
+      <td class="subtotal">$<span>0</span></td>
+      <td class="action">
+        <button class="btn btn-remove">Remove</button>
+      </td>
+  `;
+
+  document.querySelector("tbody").appendChild(newProduct);
+
+  // Adding a 'click' event listener on the 'Remove' button of the new product
+  const newProductRemoveBtn = newProduct.querySelector(".btn-remove");
+  newProductRemoveBtn.addEventListener('click', event => removeProduct(event));
+
+  // Resetting the 'Create product' form
+  newProductName.value  = 0;
+  newProductPrice.value = 0;
 }
 
 window.addEventListener('load', () => {
-  const calculatePricesBtn = document.getElementById('calculate');
-  calculatePricesBtn.addEventListener('click', calculateAll);
+  const calculatePricesBtn    = document.getElementById('calculate');
+  const createProductBtn      = document.getElementById('create');
 
-  //... your code goes here
+  const removeBtnsNodeList    = document.querySelectorAll(".btn-remove");
+  const removeBtnsArray       = Array.from(removeBtnsNodeList);
+
+  removeBtnsArray.forEach(function (removeBtn) {
+    removeBtn.addEventListener('click', event => removeProduct(event));
+  });
+  
+  calculatePricesBtn.addEventListener('click', calculateAll);
+  createProductBtn.addEventListener('click', createProduct);
 });
