@@ -53,9 +53,10 @@ function createProduct() {
 
   clone.querySelector(".name span").innerHTML = productName
   clone.querySelector(".price span").innerHTML = price
+  clone.querySelector("button").addEventListener('click', (event)=> removeProduct(event))
 
   const tbody = document.querySelector("tbody")
-  console.log(productName)
+
   if (productName !== null && price !== null && productName !== "" && price !== ""){
     tbody.appendChild(clone);
   }
