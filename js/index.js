@@ -25,42 +25,41 @@ function calculateAll() {
   for (let i = 0; i < singleProduct.length; i++){ // Met à jour le subtotal dans chaque lignes
     let subtt = singleProduct[i].querySelector('.subtotal')
 
-    //const ret =  Number(total.innerHTML) +
-    //console.log('ret=',ret)
     sum += Number(subtt.innerHTML)
   
   }
-
-  // maj total avec sum
   totalEl.innerHTML = sum
-  // end of test
-
-  // ITERATION 2
-  //... your code goes here
-
-  // ITERATION 3
-  //... your code goes here
 }
-
-// ITERATION 4
 
 function removeProduct(event) {
   const target = event.currentTarget;
 
-  console.log('The target in remove is:', target);
-
   let tr = target.closest("tr")
   tr.remove()
-  
-
-  console.log("tr =", tr)
-  //... your code goes here
 }
 
-// ITERATION 5
-
 function createProduct() {
-  //... your code goes here
+  let elem = document.querySelector('.product');
+
+  let clone = elem.cloneNode(true);
+
+  const productName = prompt("Enter your product")
+  let price = prompt("Enter your price")
+
+  while (!/^[0-9]+$/.test(price)) {
+    alert("You did not enter a number.");
+    price = prompt("Enter your price");
+  }
+
+  clone.querySelector(".name span").innerHTML = productName
+  clone.querySelector(".price span").innerHTML = price
+
+  const tbody = document.querySelector("tbody")
+  console.log(productName)
+  if (productName !== null && price !== null && productName !== "" && price !== ""){
+    tbody.appendChild(clone);
+  }
+
 }
 
 window.addEventListener('load', () => {
@@ -75,5 +74,9 @@ window.addEventListener('load', () => {
   for (let i = 0; i < removeBtnList.length; i++){
     removeBtnList[i].querySelector("button").addEventListener('click', (event)=> removeProduct(event))
   }
-  //... your code goes here
+
+  //Evenement Button Add
+  const addButton = document.querySelector("#cart button")
+  addButton.addEventListener('click', createProduct);
+
 });
